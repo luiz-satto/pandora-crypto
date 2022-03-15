@@ -9,7 +9,7 @@ import { useGetCoinsQuery } from '../../services/crypto-api';
 
 const { Title } = Typography;
 const Homepage: React.FC = () => {
-  const { data, isFetching } = useGetCoinsQuery();
+  const { data, isFetching } = useGetCoinsQuery(10);
   if (isFetching) return <Fragment>'Loading...'</Fragment>;
 
   const globalStats = data?.data?.stats;
@@ -35,7 +35,7 @@ const Homepage: React.FC = () => {
         <Title level={2} className='home-title'>Top 10 Cryptocurrencies in the world</Title>
         <Title level={3} className='show-more'><Link to='cryptocurrencies'>Show More</Link></Title>
       </div>
-      <Cryptocurrencies />
+      <Cryptocurrencies simplified={true} />
       <div className='home-heading-container'>
         <Title level={2} className='home-title'>Latest Crypto News</Title>
         <Title level={3} className='show-more'><Link to='news'>Show More</Link></Title>
