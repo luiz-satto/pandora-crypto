@@ -1,8 +1,9 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Select, Typography, Row, Col, Avatar, Card } from 'antd';
 import moment from 'moment';
 
 import { useGetNewsQuery } from '../../services/crypto-news-api';
+import { useGetCoinsQuery } from '../../services/crypto-api';
 
 const { Text, Title } = Typography;
 const { Option } = Select;
@@ -12,7 +13,9 @@ interface IProps {
 }
 
 const News: React.FC<IProps> = props => {
-    const { data: cryptoNews } = useGetNewsQuery({ newsCategory: 'Cryptocurrency', count: props.simplified ? 6 : 12 });
+    const [newsCategory, setNewsCategory] = useState('Cryptocurrency');
+    const { data: cryptoNews } = useGetNewsQuery({ newsCategory, count: props.simplified ? 6 : 12 });
+    const { data } = useGetCoinsQuery(100);
 
     if (!cryptoNews?.value) return <Fragment>'Loading...'</Fragment>;
 
@@ -20,13 +23,35 @@ const News: React.FC<IProps> = props => {
 
     return (
         <Row gutter={[24, 24]}>
+            {!props.simplified && (
+                <Col span={24}>
+                    <Select
+                        showSearch
+                        className='select-news'
+                        placeholder='Select a Crypto'
+                        optionFilterProp='children'
+                        onChange={(value) => setNewsCategory(value)}
+                        filterOption={(input, option) => {
+                            if (option?.children) {
+                                let children = option?.children.toString().toLowerCase();
+                                return children.indexOf(input.toLowerCase()) >= 0;
+                            }
+
+                            return false;
+                        }}
+                    >
+                        <Option value='Cryptocurrency'>All</Option>
+                        {data?.data?.coins.map((coin) => <Option value={coin.name}>{coin.name}</Option>)}
+                    </Select>
+                </Col>
+            )}
             {cryptoNews.value.map((news, i) => (
                 <Col xs={24} sm={12} lg={8} key={i}>
                     <Card className='news-card' hoverable>
                         <a href={news.url} target='_blank' rel="noreferrer">
                             <div className='news-image-container'>
                                 <Title className='news-title' level={4}>{news.name}</Title>
-                                <img src={news?.image?.thumbnail?.contentUrl || demoImage} alt='news'></img>
+                                <img style={{ maxWidth: '200px', maxHeight: '100px' }} src={news?.image?.thumbnail?.contentUrl || demoImage} alt='news'></img>
                             </div>
                             <p>
                                 {news.description.length > 100

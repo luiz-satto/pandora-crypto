@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { Typography, Row, Col, Statistic, Card } from 'antd';
+import { Typography, Row, Col, Statistic } from 'antd';
 
 import millify from 'millify';
+
 import { Cryptocurrencies, News } from '../../components';
 import { useGetCoinsQuery } from '../../services/crypto-api';
 
@@ -18,6 +19,7 @@ const Homepage: React.FC = () => {
   const totalMarkets = globalStats?.totalMarkets ? globalStats?.totalMarkets : 0;
   const totalMarketCap = globalStats?.totalMarketCap ? Number(globalStats?.totalMarketCap) : 0;
   const total24hVolume = globalStats?.total24hVolume ? Number(globalStats?.total24hVolume) : 0;
+  const total24hPercent = (total24hVolume / totalMarketCap) * 100;
 
   return (
     <Fragment>
@@ -26,10 +28,11 @@ const Homepage: React.FC = () => {
         <Col xs={24} sm={12} lg={8}>
           <Statistic title='Total Cryptocurrencies' value={totalCryptocurrencies} />
           <Statistic title='Total Exchanges' value={millify(totalExchanges)} />
+          <Statistic title='Total Market Cap' value={millify(totalMarketCap)} />
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Statistic title='Total Market Cap' value={millify(totalMarketCap)} />
           <Statistic title='Total 24h Volume' value={millify(total24hVolume)} />
+          <Statistic title='Total 24h %' value={millify(total24hPercent) + '%'} />
           <Statistic title='Total Markets' value={millify(totalMarkets)} />
         </Col>
       </Row>
