@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { CryptoCoinData } from '../types/cryptoCoinData';
+import { CryptoCoinData } from '../types/CryptoCoinTypes/CryptoCoinData';
 
 const cryptoApiHeaders = {
     'x-rapidapi-host': process.env.REACT_APP_CRYPTO_API_HOST,
@@ -9,7 +9,7 @@ const cryptoApiHeaders = {
 const createRequest = (url: string) => ({ url, headers: cryptoApiHeaders });
 export const cryptoApi = createApi({
     reducerPath: 'cryptoApi',
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_CRYPTO_API_BASE_URL }),
     endpoints: (builder) => ({
         getCoins: builder.query<CryptoCoinData, number>({
             query: (count) => createRequest(`/coins?limit=${count}`)

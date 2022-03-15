@@ -1,13 +1,13 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { Typography, Row, Col, Statistic } from 'antd';
+import { Typography, Row, Col, Statistic, Card } from 'antd';
 
 import millify from 'millify';
 import { Cryptocurrencies, News } from '../../components';
 import { useGetCoinsQuery } from '../../services/crypto-api';
 
-
 const { Title } = Typography;
+
 const Homepage: React.FC = () => {
   const { data, isFetching } = useGetCoinsQuery(10);
   if (isFetching) return <Fragment>'Loading...'</Fragment>;
@@ -22,10 +22,12 @@ const Homepage: React.FC = () => {
   return (
     <Fragment>
       <Title level={2} className='heading'>Global Crypto Stats</Title>
-      <Row>
-        <Col span={12}>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} sm={12} lg={8}>
           <Statistic title='Total Cryptocurrencies' value={totalCryptocurrencies} />
           <Statistic title='Total Exchanges' value={millify(totalExchanges)} />
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
           <Statistic title='Total Market Cap' value={millify(totalMarketCap)} />
           <Statistic title='Total 24h Volume' value={millify(total24hVolume)} />
           <Statistic title='Total Markets' value={millify(totalMarkets)} />
@@ -40,7 +42,7 @@ const Homepage: React.FC = () => {
         <Title level={2} className='home-title'>Latest Crypto News</Title>
         <Title level={3} className='show-more'><Link to='news'>Show More</Link></Title>
       </div>
-      <News />
+      <News simplified={true} />
     </Fragment>
   )
 }

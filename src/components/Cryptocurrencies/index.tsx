@@ -4,7 +4,7 @@ import { Card, Row, Col, Input } from 'antd';
 
 import millify from 'millify';
 import { useGetCoinsQuery } from '../../services/crypto-api';
-import { Coin } from '../../types/coin';
+import { CryptoCoin } from '../../types/CryptoCoinTypes/CryptoCoin';
 
 interface IProps {
     simplified?: boolean
@@ -13,7 +13,7 @@ interface IProps {
 const Cryptocurrencies: React.FC<IProps> = props => {
     const count = props.simplified ? 10 : 100;
     const { data: cryptosList, isFetching } = useGetCoinsQuery(count);
-    const [cryptos, setCryptos] = useState<Coin[]>([]);
+    const [cryptos, setCryptos] = useState<CryptoCoin[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
 
     useEffect(() => {

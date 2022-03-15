@@ -1,4 +1,4 @@
-export type Stats = {
+export type CryptoStats = {
     total: number;
     totalCoins: number;
     totalMarkets: number;
