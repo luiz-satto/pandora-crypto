@@ -3,7 +3,7 @@ import { Select, Typography, Row, Col, Avatar, Card } from 'antd';
 import moment from 'moment';
 
 import { useGetNewsQuery } from '../../services/crypto-news-api';
-import { useGetCoinsQuery } from '../../services/crypto-api';
+import { useGetCryptoCoinsQuery } from '../../services/crypto-api';
 
 const { Text, Title } = Typography;
 const { Option } = Select;
@@ -15,7 +15,7 @@ interface IProps {
 const News: React.FC<IProps> = props => {
     const [newsCategory, setNewsCategory] = useState('Cryptocurrency');
     const { data: cryptoNews } = useGetNewsQuery({ newsCategory, count: props.simplified ? 6 : 12 });
-    const { data } = useGetCoinsQuery(100);
+    const { data } = useGetCryptoCoinsQuery(100);
 
     if (!cryptoNews?.value) return <Fragment>'Loading...'</Fragment>;
 

@@ -5,12 +5,12 @@ import { Typography, Row, Col, Statistic } from 'antd';
 import millify from 'millify';
 
 import { Cryptocurrencies, News } from '../../components';
-import { useGetCoinsQuery } from '../../services/crypto-api';
+import { useGetCryptoCoinsQuery } from '../../services/crypto-api';
 
 const { Title } = Typography;
 
 const Homepage: React.FC = () => {
-  const { data, isFetching } = useGetCoinsQuery(10);
+  const { data, isFetching } = useGetCryptoCoinsQuery(10);
   if (isFetching) return <Fragment>'Loading...'</Fragment>;
 
   const globalStats = data?.data?.stats;

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Card, Row, Col, Input } from 'antd';
 
 import millify from 'millify';
-import { useGetCoinsQuery } from '../../services/crypto-api';
+import { useGetCryptoCoinsQuery } from '../../services/crypto-api';
 import { CryptoCoin } from '../../types/CryptoCoinTypes/CryptoCoin';
 
 interface IProps {
@@ -12,7 +12,7 @@ interface IProps {
 
 const Cryptocurrencies: React.FC<IProps> = props => {
     const count = props.simplified ? 10 : 100;
-    const { data: cryptosList, isFetching } = useGetCoinsQuery(count);
+    const { data: cryptosList, isFetching } = useGetCryptoCoinsQuery(count);
     const [cryptos, setCryptos] = useState<CryptoCoin[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
 
