@@ -4,7 +4,7 @@ import { Card, Row, Col, Input } from 'antd';
 
 import millify from 'millify';
 import { useGetCryptoCoinsQuery } from '../../services/crypto-api';
-import { CryptoCoin } from '../../types/CryptoCoinTypes/CryptoCoin';
+import { CryptoCoin } from '../../types/CryptoCoin';
 
 interface IProps {
     simplified?: boolean

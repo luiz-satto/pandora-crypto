@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Col, Row, Typography, Select } from 'antd';
 
@@ -18,33 +18,60 @@ import {
 } from '@ant-design/icons';
 
 import { useGetCryptoDetailsQuery } from '../../services/crypto-api';
+import { useGetCryptoHistoryQuery } from '../../services/crypto-api';
+
+import { CryptoCoin } from '../../types/CryptoCoin';
+import LineChart from '../LineChart';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
+function getCryptoCoinStats(cryptoDetails: CryptoCoin) {
+    const price = cryptoDetails.price ? cryptoDetails.price : 0;
+    const rank = cryptoDetails.rank ? cryptoDetails?.rank : 0;
+    const volume = cryptoDetails['24hVolume'] ? cryptoDetails['24hVolume'] : 0;
+    const marketCap = cryptoDetails?.marketCap ? cryptoDetails?.marketCap : 0;
+    const allTimeHigh = cryptoDetails.allTimeHigh;
+    const allTimeHighPrice = allTimeHigh?.price ? allTimeHigh?.price : 0;
+
+    return [
+        { title: 'Price to USD', value: `$ ${millify(Number(price))}`, icon: <DollarCircleOutlined /> },
+        { title: 'Rank', value: rank, icon: <NumberOutlined /> },
+        { title: '24h Volume', value: `$ ${millify(Number(volume))}`, icon: <ThunderboltOutlined /> },
+        { title: 'Market Cap', value: `$ ${millify(Number(marketCap))}`, icon: <DollarCircleOutlined /> },
+        { title: 'All-time-high(daily avg.)', value: `$ ${millify(Number(allTimeHighPrice))}`, icon: <TrophyOutlined /> },
+    ];
+}
+
+function getCryptoCoinGenericStats(cryptoDetails: CryptoCoin) {
+    const numberOfMarkets = cryptoDetails.numberOfMarkets ? cryptoDetails.numberOfMarkets : 0;
+    const numberOfExchanges = cryptoDetails.numberOfExchanges ? cryptoDetails?.numberOfExchanges : 0;
+    const confirmed = cryptoDetails.supply?.confirmed;
+    const total = cryptoDetails.supply?.total ? cryptoDetails.supply?.total : 0;
+    const circulating = cryptoDetails.supply?.circulating ? cryptoDetails.supply?.circulating : 0;
+
+    return [
+        { title: 'Number Of Markets', value: numberOfMarkets, icon: <FundOutlined /> },
+        { title: 'Number Of Exchanges', value: numberOfExchanges, icon: <MoneyCollectOutlined /> },
+        { title: 'Aprroved Supply', value: confirmed ? <CheckOutlined /> : <StopOutlined />, icon: <ExclamationCircleOutlined /> },
+        { title: 'Total Supply', value: `$ ${millify(Number(total))}`, icon: <ExclamationCircleOutlined /> },
+        { title: 'Circulating Supply', value: `$ ${millify(Number(circulating))}`, icon: <ExclamationCircleOutlined /> },
+    ];
+}
+
 const CryptoDetails: React.FC = () => {
-    const [timePeriod, setTimePeriod] = useState('7d');
-    const { coinId } = useParams();
-    const { data, isFetching } = useGetCryptoDetailsQuery(coinId!);
-    const cryptoDetails = data?.data?.coin;
-
     const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
+    const [timePeriod, setTimePeriod] = useState('7d');
 
-    const stats = [
-        { title: 'Price to USD', value: `$ ${cryptoDetails?.price && millify(Number(cryptoDetails?.price))}`, icon: <DollarCircleOutlined /> },
-        { title: 'Rank', value: cryptoDetails?.rank, icon: <NumberOutlined /> },
-        { title: '24h Volume', value: `$ ${cryptoDetails?.['24hVolume'] && millify(Number(cryptoDetails?.['24hVolume']))}`, icon: <ThunderboltOutlined /> },
-        { title: 'Market Cap', value: `$ ${cryptoDetails?.marketCap && millify(Number(cryptoDetails?.marketCap))}`, icon: <DollarCircleOutlined /> },
-        { title: 'All-time-high(daily avg.)', value: `$ ${cryptoDetails?.allTimeHigh?.price && millify(Number(cryptoDetails?.allTimeHigh?.price))}`, icon: <TrophyOutlined /> },
-    ];
+    const { coinId } = useParams();
+    const { data, isFetching } = useGetCryptoDetailsQuery(coinId);
+    const { data: coinHistory } = useGetCryptoHistoryQuery({ coinId, timePeriod });
 
-    const genericStats = [
-        { title: 'Number Of Markets', value: cryptoDetails?.numberOfMarkets, icon: <FundOutlined /> },
-        { title: 'Number Of Exchanges', value: cryptoDetails?.numberOfExchanges, icon: <MoneyCollectOutlined /> },
-        { title: 'Aprroved Supply', value: cryptoDetails?.supply?.confirmed ? <CheckOutlined /> : <StopOutlined />, icon: <ExclamationCircleOutlined /> },
-        { title: 'Total Supply', value: `$ ${cryptoDetails?.supply?.total && millify(Number(cryptoDetails?.supply?.total))}`, icon: <ExclamationCircleOutlined /> },
-        { title: 'Circulating Supply', value: `$ ${cryptoDetails?.supply?.circulating && millify(Number(cryptoDetails?.supply?.circulating))}`, icon: <ExclamationCircleOutlined /> },
-    ];
+    if (isFetching) return <Fragment>'Loading...'</Fragment>;
+
+    const cryptoDetails = data?.data?.coin;
+    const stats = getCryptoCoinStats(cryptoDetails!);
+    const genericStats = getCryptoCoinGenericStats(cryptoDetails!);
 
     return (
         <Col className='coin-detail-container'>
@@ -65,7 +92,11 @@ const CryptoDetails: React.FC = () => {
             >
                 {time.map((date) => <Option key={date}>{date}</Option>)}
             </Select>
-            {/* Line chart */}
+            <LineChart
+                coinHistory={coinHistory}
+                currentPrice={millify(Number(cryptoDetails?.price))}
+                coinName={cryptoDetails?.name!}
+            />
             <Col className='stats-container'>
                 <Col className='coin-value-statistics'>
                     <Col className='coin-value-statistics-heading'>
@@ -76,8 +107,8 @@ const CryptoDetails: React.FC = () => {
                             An overview showing the stats of {cryptoDetails?.name}
                         </p>
                     </Col>
-                    {stats.map(({ icon, title, value }) => (
-                        <Col className='coin-stats'>
+                    {stats.map(({ icon, title, value }, i) => (
+                        <Col className='coin-stats' key={i}>
                             <Col className='coin-stats-name'>
                                 <Text>{icon}</Text>
                                 <Text>{title}</Text>
@@ -95,8 +126,8 @@ const CryptoDetails: React.FC = () => {
                             An overview showing the stats of all cryptocurrencies
                         </p>
                     </Col>
-                    {genericStats.map(({ icon, title, value }) => (
-                        <Col className='coin-stats'>
+                    {genericStats.map(({ icon, title, value }, i) => (
+                        <Col className='coin-stats' key={i}>
                             <Col className='coin-stats-name'>
                                 <Text>{icon}</Text>
                                 <Text>{title}</Text>
@@ -110,7 +141,7 @@ const CryptoDetails: React.FC = () => {
                 <Row className='coin-desc'>
                     <Title level={3} className='coin-details-heading'>
                         What is {cryptoDetails?.name}?
-                        {HTMLReactParser(cryptoDetails?.description ? cryptoDetails?.description : '')}
+                        {HTMLReactParser(cryptoDetails?.description!)}
                     </Title>
                 </Row>
                 <Col className='coin-links'>

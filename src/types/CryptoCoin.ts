@@ -1,16 +1,16 @@
-interface ILink {
-    name: string,
-    url: string,
-    type: string
+type Link = {
+    name: string;
+    url: string;
+    type: string;
 }
 
-interface ISupply {
-    confirmed: boolean,
-    circulating: string,
-    total: string
+type Supply = {
+    confirmed: boolean;
+    circulating: string;
+    total: string;
 }
 
-interface IAllTimeHigh {
+type AllTimeHigh = {
     price: string;
     timestamp: number;
 }
@@ -31,9 +31,9 @@ export type CryptoCoin = {
     sparkline: string[];
     coinrankingUrl: string;
     "24hVolume": string;
-    links: ILink[];
-    supply: ISupply;
-    allTimeHigh: IAllTimeHigh;
+    links: Link[];
+    supply: Supply;
+    allTimeHigh: AllTimeHigh;
     numberOfMarkets: number;
     numberOfExchanges: number;
 }
