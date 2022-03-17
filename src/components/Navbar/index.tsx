@@ -40,10 +40,7 @@ const Navbar: React.FC = () => {
                     <Item key={2} icon={<FundOutlined />}>
                         <Link to='/cryptocurrencies' onClick={() => setActiveMenu(screenSize >= 768)}>Cryptocurrencies</Link>
                     </Item>
-                    <Item key={3} icon={<MenuOutlined />}>
-                        <Link to='/exchanges' onClick={() => setActiveMenu(screenSize >= 768)}>Exchanges</Link>
-                    </Item>
-                    <Item key={4} icon={<BulbOutlined />}>
+                    <Item key={3} icon={<BulbOutlined />}>
                         <Link to='/news' onClick={() => setActiveMenu(screenSize >= 768)}>News</Link>
                     </Item>
                 </Menu>

@@ -2,7 +2,7 @@ import React from 'react'
 import { Routes, Route, Link } from 'react-router-dom';
 import { Layout, Typography, Space } from 'antd';
 
-import { Navbar, Homepage, Exchanges, Cryptocurrencies, CryptoDetails, News } from './components';
+import { Navbar, Homepage, Cryptocurrencies, CryptoDetails, News } from './components';
 
 import './App.css';
 
@@ -17,7 +17,6 @@ const App: React.FC = () => {
                     <div className='routes'>
                         <Routes>
                             <Route index element={<Homepage />} />
-                            <Route path="exchanges" element={<Exchanges />} />
                             <Route path="cryptocurrencies" element={<Cryptocurrencies />} />
                             <Route path="cryptocurrencies/:coinId" element={<CryptoDetails />} />
                             <Route path="news" element={<News />} />

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Card, Row, Col, Input } from 'antd';
 
 import millify from 'millify';
+import Loader from '../Loader';
+
 import { useGetCryptoCoinsQuery } from '../../services/crypto-api';
 import { CryptoCoin } from '../../types/CryptoCoin';
 
@@ -24,7 +26,7 @@ const Cryptocurrencies: React.FC<IProps> = props => {
         }
     }, [cryptosList, searchTerm]);
 
-    if (isFetching) return <Fragment>'Loading...'</Fragment>;
+    if (isFetching) return <Loader />;
 
     return (
         <Fragment>

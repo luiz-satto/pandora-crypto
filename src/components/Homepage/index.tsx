@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Typography, Row, Col, Statistic } from 'antd';
 
 import millify from 'millify';
+import Loader from '../Loader';
 
 import { Cryptocurrencies, News } from '../../components';
 import { useGetCryptoCoinsQuery } from '../../services/crypto-api';
@@ -11,7 +12,8 @@ const { Title } = Typography;
 
 const Homepage: React.FC = () => {
   const { data, isFetching } = useGetCryptoCoinsQuery(10);
-  if (isFetching) return <Fragment>'Loading...'</Fragment>;
+
+  if (isFetching) return <Loader />;
 
   const globalStats = data?.data?.stats;
   const totalCryptocurrencies = globalStats?.total ? globalStats?.total : 0;

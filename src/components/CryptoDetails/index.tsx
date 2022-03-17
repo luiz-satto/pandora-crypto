@@ -1,9 +1,11 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Col, Row, Typography, Select } from 'antd';
 
 import millify from 'millify';
 import HTMLReactParser from 'html-react-parser';
+import LineChart from '../LineChart';
+import Loader from '../Loader';
 
 import {
     MoneyCollectOutlined,
@@ -19,9 +21,7 @@ import {
 
 import { useGetCryptoDetailsQuery } from '../../services/crypto-api';
 import { useGetCryptoHistoryQuery } from '../../services/crypto-api';
-
 import { CryptoCoin } from '../../types/CryptoCoin';
-import LineChart from '../LineChart';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -67,7 +67,7 @@ const CryptoDetails: React.FC = () => {
     const { data, isFetching } = useGetCryptoDetailsQuery(coinId);
     const { data: coinHistory } = useGetCryptoHistoryQuery({ coinId, timePeriod });
 
-    if (isFetching) return <Fragment>'Loading...'</Fragment>;
+    if (isFetching) return <Loader />;
 
     const cryptoDetails = data?.data?.coin;
     const stats = getCryptoCoinStats(cryptoDetails!);
