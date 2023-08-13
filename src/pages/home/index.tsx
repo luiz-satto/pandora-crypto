@@ -1,12 +1,12 @@
-import React from 'react'
 import { Routes, Route, Link } from 'react-router-dom';
 import { Layout, Typography, Space } from 'antd';
+import { Navbar } from '../../components';
+import { CryptoCurrencies } from '../crypto';
+import { CryptoDetails } from '../crypto/details';
+import { News } from '../news';
+import { HomeDetails } from './details';
 
-import { Navbar, Homepage, Cryptocurrencies, CryptoDetails, News } from './components';
-
-import './App.css';
-
-const App: React.FC = () => {
+export const Home = () => {
     return (
         <div className='app'>
             <div className='navbar'>
@@ -16,8 +16,8 @@ const App: React.FC = () => {
                 <Layout>
                     <div className='routes'>
                         <Routes>
-                            <Route index element={<Homepage />} />
-                            <Route path="cryptocurrencies" element={<Cryptocurrencies />} />
+                            <Route index element={<HomeDetails />} />
+                            <Route path="cryptocurrencies" element={<CryptoCurrencies />} />
                             <Route path="cryptocurrencies/:coinId" element={<CryptoDetails />} />
                             <Route path="news" element={<News />} />
                         </Routes>
@@ -38,5 +38,3 @@ const App: React.FC = () => {
         </div>
     )
 }
-
-export default App;

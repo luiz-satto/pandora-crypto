@@ -1,28 +1,34 @@
-import React, { useState } from 'react'
-import { Select, Typography, Row, Col, Avatar, Card } from 'antd';
-
+import { useState } from 'react'
+import {
+    Select,
+    Typography,
+    Row,
+    Col,
+    Avatar,
+    Card
+} from 'antd';
 import moment from 'moment';
-import Loader from '../Loader';
+import { useGetNewsQuery } from '../../api/crypto-news-api';
+import { useGetCryptoCoinsQuery } from '../../api/crypto-api';
+import { Loader } from '../../components';
 
-import { useGetNewsQuery } from '../../services/crypto-news-api';
-import { useGetCryptoCoinsQuery } from '../../services/crypto-api';
+interface Props {
+    simplified?: boolean
+}
 
 const { Text, Title } = Typography;
 const { Option } = Select;
 
-interface IProps {
-    simplified?: boolean
-}
-
-const News: React.FC<IProps> = props => {
+export const News = (props: Props) => {
     const [newsCategory, setNewsCategory] = useState('Cryptocurrency');
     const { data: cryptoNews } = useGetNewsQuery({ newsCategory, count: props.simplified ? 6 : 12 });
     const { data } = useGetCryptoCoinsQuery(100);
 
-    if (!cryptoNews?.value) return <Loader />;
+    if (!cryptoNews?.value) {
+        return <Loader />;
+    }
 
     const demoImage = '';
-
     return (
         <Row gutter={[24, 24]}>
             {!props.simplified && (
@@ -31,19 +37,19 @@ const News: React.FC<IProps> = props => {
                         showSearch
                         className='select-news'
                         placeholder='Select a Crypto'
-                        optionFilterProp='children'
+                        optionFilterProp='items'
                         onChange={(value) => setNewsCategory(value)}
                         filterOption={(input, option) => {
-                            if (option?.children) {
-                                let children = option?.children.toString().toLowerCase();
-                                return children.indexOf(input.toLowerCase()) >= 0;
+                            if (option?.items) {
+                                let items = option?.items.toString().toLowerCase();
+                                return items.indexOf(input.toLowerCase()) >= 0;
                             }
 
                             return false;
                         }}
                     >
                         <Option value='Cryptocurrency'>All</Option>
-                        {data?.data?.coins.map((coin) => <Option value={coin.name}>{coin.name}</Option>)}
+                        {data?.coins.map((coin) => <Option value={coin.name}>{coin.name}</Option>)}
                     </Select>
                 </Col>
             )}
@@ -53,7 +59,7 @@ const News: React.FC<IProps> = props => {
                         <a href={news.url} target='_blank' rel="noreferrer">
                             <div className='news-image-container'>
                                 <Title className='news-title' level={4}>{news.name}</Title>
-                                <img style={{ maxWidth: '200px', maxHeight: '100px' }} src={news?.image?.thumbnail?.contentUrl || demoImage} alt='news'></img>
+                                <img style={{ maxWidth: '200px', maxHeight: '100px' }} src={news?.image?.thumbnail?.contentUrl || demoImage} alt='news' />
                             </div>
                             <p>
                                 {news.description.length > 100
@@ -73,7 +79,5 @@ const News: React.FC<IProps> = props => {
                 </Col>
             ))}
         </Row>
-    )
+    );
 }
-
-export default News;

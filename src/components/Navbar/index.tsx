@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Menu, Typography, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
 import { HomeOutlined, BulbOutlined, FundOutlined, MenuOutlined } from '@ant-design/icons';
 
-import icon from '../../assets/cryptocurrency.png';
+import icon from './assets/cryptocurrency.png';
 
 const { Title } = Typography;
 const { Item } = Menu;
 
-const Navbar: React.FC = () => {
+export const Navbar = () => {
     const [activeMenu, setActiveMenu] = useState(true);
     const [screenSize, setScreenSize] = useState(0);
 
@@ -48,5 +48,3 @@ const Navbar: React.FC = () => {
         </div>
     )
 }
-
-export default Navbar;

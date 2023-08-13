@@ -1,8 +1,5 @@
-import React, { Fragment } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Col, Row, Typography } from 'antd';
-import ICryptoCoinHistory from '../../interfaces/ICryptoCoinHistory';
-
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -12,6 +9,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js'
+import { CryptoCoinHistory } from '../../models/CryptoHistory';
 
 ChartJS.register(
     CategoryScale,
@@ -22,14 +20,15 @@ ChartJS.register(
     Legend
 );
 
-interface IProps {
-    coinHistory: ICryptoCoinHistory | undefined,
+interface Props {
+    coinHistory: CryptoCoinHistory | undefined,
     currentPrice: string,
     coinName: string
 }
 
 const { Title } = Typography;
-const LineChart: React.FC<IProps> = props => {
+
+export const LineChart = (props: Props) => {
     let coinHistoryData = props.coinHistory?.data;
     let coinTimestamp = [];
     let coinPrice = [];
@@ -68,7 +67,7 @@ const LineChart: React.FC<IProps> = props => {
     };
 
     return (
-        <Fragment>
+        <>
             <Row className='chart-header'>
                 <Title level={2} className='chart-title'>{props.coinName} Price Chart</Title>
                 <Col className='price-container' key={props.coinName}>
@@ -77,8 +76,6 @@ const LineChart: React.FC<IProps> = props => {
                 </Col>
             </Row>
             <Line data={data} options={options} />
-        </Fragment>
+        </>
     )
 }
-
-export default LineChart

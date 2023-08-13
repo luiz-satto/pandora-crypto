@@ -4,8 +4,6 @@ import { Col, Row, Typography, Select } from 'antd';
 
 import millify from 'millify';
 import HTMLReactParser from 'html-react-parser';
-import LineChart from '../LineChart';
-import Loader from '../Loader';
 
 import {
     MoneyCollectOutlined,
@@ -19,9 +17,11 @@ import {
     ThunderboltOutlined
 } from '@ant-design/icons';
 
-import { useGetCryptoDetailsQuery } from '../../services/crypto-api';
-import { useGetCryptoHistoryQuery } from '../../services/crypto-api';
-import { CryptoCoin } from '../../types/CryptoCoin';
+import { useGetCryptoDetailsQuery } from '../../../api/crypto-api';
+import { useGetCryptoHistoryQuery } from '../../../api/crypto-api';
+import { CryptoCoin } from '../../../models/CryptoCoin';
+import { Loader } from '../../../components';
+import { LineChart } from '../../../components/line-chart';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -59,7 +59,7 @@ function getCryptoCoinGenericStats(cryptoDetails: CryptoCoin) {
     ];
 }
 
-const CryptoDetails: React.FC = () => {
+export const CryptoDetails = () => {
     const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
     const [timePeriod, setTimePeriod] = useState('7d');
 
@@ -67,9 +67,11 @@ const CryptoDetails: React.FC = () => {
     const { data, isFetching } = useGetCryptoDetailsQuery(coinId);
     const { data: coinHistory } = useGetCryptoHistoryQuery({ coinId, timePeriod });
 
-    if (isFetching) return <Loader />;
+    if (isFetching) {
+        return <Loader />;
+    }
 
-    const cryptoDetails = data?.data?.coin;
+    const cryptoDetails = data;
     const stats = getCryptoCoinStats(cryptoDetails!);
     const genericStats = getCryptoCoinGenericStats(cryptoDetails!);
 
@@ -163,5 +165,3 @@ const CryptoDetails: React.FC = () => {
         </Col>
     )
 }
-
-export default CryptoDetails;

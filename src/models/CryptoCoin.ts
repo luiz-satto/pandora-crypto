@@ -1,21 +1,30 @@
-type Link = {
+interface Link {
     name: string;
     url: string;
     type: string;
 }
 
-type Supply = {
+interface Supply {
     confirmed: boolean;
     circulating: string;
     total: string;
 }
 
-type AllTimeHigh = {
+interface AllTimeHigh {
     price: string;
     timestamp: number;
 }
 
-export type CryptoCoin = {
+export interface CryptoStats {
+    total: number;
+    totalCoins: number;
+    totalMarkets: number;
+    totalExchanges: number;
+    totalMarketCap: string;
+    total24hVolume: string;
+};
+
+export interface CryptoCoin {
     uuid: string;
     symbol: string;
     name: string;
@@ -36,4 +45,9 @@ export type CryptoCoin = {
     allTimeHigh: AllTimeHigh;
     numberOfMarkets: number;
     numberOfExchanges: number;
+}
+
+export interface CryptoCoinList {
+    stats: CryptoStats;
+    coins: CryptoCoin[]
 }

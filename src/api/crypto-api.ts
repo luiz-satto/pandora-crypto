@@ -1,8 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-import ICryptoCoin from '../interfaces/ICryptoCoin';
-import ICryptoCoinDetails from '../interfaces/ICryptoCoinDetails';
-import ICryptoCoinHistory from '../interfaces/ICryptoCoinHistory';
+import { CryptoCoin, CryptoCoinList } from '../models/CryptoCoin';
+import { CryptoCoinHistory } from '../models/CryptoHistory';
 
 const cryptoApiHeaders = {
     'x-rapidapi-host': process.env.REACT_APP_CRYPTO_API_HOST,
@@ -14,13 +12,13 @@ export const cryptoApi = createApi({
     reducerPath: 'cryptoApi',
     baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_CRYPTO_API_BASE_URL }),
     endpoints: (builder) => ({
-        getCryptoCoins: builder.query<ICryptoCoin, number>({
+        getCryptoCoins: builder.query<CryptoCoinList, number>({
             query: (count) => createRequest(`/coins?limit=${count}`)
         }),
-        getCryptoDetails: builder.query<ICryptoCoinDetails, string | undefined>({
+        getCryptoDetails: builder.query<CryptoCoin, string | undefined>({
             query: (coinId) => createRequest(`/coin/${coinId}`)
         }),
-        getCryptoHistory: builder.query<ICryptoCoinHistory, { coinId: string | undefined; timePeriod: string; }>({
+        getCryptoHistory: builder.query<CryptoCoinHistory, { coinId: string | undefined; timePeriod: string; }>({
             query: ({ coinId, timePeriod }) => createRequest(`/coin/${coinId}/history?timePeriod=${timePeriod}`)
         }),
     }),
